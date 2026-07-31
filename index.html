@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kafe Senja - Kopi & Makanan</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==================== CSS RESET & VARIABEL ==================== */
+        :root {
+            --primary: #6B3A2E;
+            --primary-light: #8B5E3C;
+            --secondary: #D4956A;
+            --accent: #F5DEB3;
+            --accent-light: #FFF3E0;
+            --bg: #FFF8F0;
+            --bg-card: #FFFFFF;
+            --text: #3E2723;
+            --text-light: #5D4037;
+            --text-muted: #8D6E63;
+            --success: #4CAF50;
+            --danger: #E74C3C;
+            --gold: #FFB300;
+            --shadow: 0 4px 20px rgba(62, 39, 35, 0.12);
+            --shadow-hover: 0 12px 32px rgba(62, 39, 35, 0.2);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 420px;
+            --header-height: 70px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: var(--header-height);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== HEADER & NAVIGASI ==================== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 248, 240, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(107, 58, 46, 0.1);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            box-shadow: 0 2px 20px rgba(62, 39, 35, 0.15);
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
+        }
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+        .nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+            padding: 4px 0;
+        }
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .nav a:hover::after,
+        .nav a.active::after {
+            width: 100%;
+        }
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Tombol Keranjang di Navigasi */
+        .cart-nav-btn {
+            position: relative;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .cart-nav-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid #fff;
+            transition: var(--transition);
+        }
+        .cart-badge:empty {
+            display: none;
+        }
+        .cart-badge.pulse {
+            animation: badgePulse 0.4s ease;
+        }
+        @keyframes badgePulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.35);
+            }
+        }
+
+        /* Hamburger menu (mobile) */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+            padding: 8px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            display: block;
+            width: 26px;
+            height: 2.5px;
+            background: var(--text);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* ==================== HERO / BERANDA ==================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 100px 24px 60px;
+            background: linear-gradient(160deg, #FFF8F0 0%, #F5DEB3 40%, #E8C9A0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(212, 149, 106, 0.25) 0%, transparent 70%);
+            top: -150px;
+            right: -200px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(107, 58, 46, 0.12) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 650px;
+        }
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+        .hero h1 span {
+            color: var(--secondary);
+        }
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-light);
+            margin-bottom: 32px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            border: none;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(107, 58, 46, 0.3);
+        }
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(107, 58, 46, 0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ==================== SECTION UMUM ==================== */
+        .section {
+            padding: 80px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            font-size: 1rem;
+        }
+
+        /* ==================== MENU GRID ==================== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+        .menu-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+        .menu-card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background: #e0d5c8;
+        }
+        .menu-card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-card-body h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .menu-card-body .desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            flex: 1;
+        }
+        .menu-card-body .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .btn-add-cart {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-add-cart:hover {
+            background: var(--primary-light);
+        }
+        .btn-add-cart:active {
+            transform: scale(0.96);
+        }
+
+        /* ==================== SIDEBAR KERANJANG ==================== */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: var(--sidebar-width);
+            max-width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: #fff;
+            z-index: 2001;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        .sidebar-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+        .sidebar-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .sidebar-close {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: var(--transition);
+            line-height: 1;
+        }
+        .sidebar-close:hover {
+            background: #f5f5f5;
+            color: var(--text);
+        }
+        .sidebar-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .sidebar-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px 20px;
+            font-size: 0.95rem;
+        }
+        .sidebar-empty .empty-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+        .cart-item {
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            padding: 12px;
+            background: #fafaf7;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .cart-item:hover {
+            background: #f5f0ea;
+        }
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            flex-shrink: 0;
+            background: #e0d5c8;
+        }
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cart-item-info .cart-item-price {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--text);
+            font-family: inherit;
+            line-height: 1;
+        }
+        .qty-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--accent-light);
+        }
+        .qty-num {
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: #c0392b;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: var(--transition);
+            flex-shrink: 0;
+            font-family: inherit;
+        }
+        .cart-item-remove:hover {
+            background: #fdecea;
+        }
+        .cart-item-subtotal {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .sidebar-footer {
+            padding: 20px 24px;
+            border-top: 2px solid #eee;
+            flex-shrink: 0;
+            background: #fff;
+        }
+        .sidebar-footer .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+        .sidebar-footer .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+            transform: translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-overlay.open .modal {
+            transform: translateY(0);
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: var(--transition);
+            line-height: 1;
+            z-index: 1;
+        }
+        .modal-close:hover {
+            background: #f5f5f5;
+            color: var(--text);
+        }
+        .modal h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .modal h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .modal .discount-highlight {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #E67E22;
+            margin: 8px 0;
+        }
+        .modal .summary-table {
+            width: 100%;
+            text-align: left;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+        .modal .summary-table td {
+            padding: 8px 4px;
+            border-bottom: 1px solid #f0e8e0;
+        }
+        .modal .summary-table .total-final {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary);
+            border-bottom: none;
+        }
+
+        /* Spin Wheel Canvas */
+        .wheel-container {
+            position: relative;
+            display: inline-block;
+            margin: 16px auto;
+        }
+        .wheel-container canvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        .wheel-pointer {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 30px solid var(--danger);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            z-index: 2;
+            pointer-events: none;
+        }
+        .btn-spin {
+            margin-top: 8px;
+            padding: 14px 40px;
+            font-size: 1.05rem;
+        }
+        .result-text {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text);
+            margin-top: 12px;
+            min-height: 24px;
+        }
+
+        /* ==================== TOAST ==================== */
+        .toast-container {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            background: #2e7d32;
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            animation: toastIn 0.4s ease, toastOut 0.4s ease 2.2s forwards;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 380px;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        @keyframes toastOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.85);
+            }
+        }
+
+        /* ==================== TENTANG KAMI & FOOTER ==================== */
+        .about-section {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 48px 32px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .about-section p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        .footer {
+            background: var(--primary);
+            color: #f5e6d8;
+            padding: 48px 24px 32px;
+            text-align: center;
+        }
+        .footer-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            text-align: left;
+        }
+        .footer h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .footer p,
+        .footer a {
+            font-size: 0.88rem;
+            color: #e0ceb8;
+            text-decoration: none;
+            line-height: 1.8;
+        }
+        .footer a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            margin-top: 32px;
+            font-size: 0.8rem;
+            color: #c4a98e;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 20px;
+        }
+
+        /* Pesanan Saya */
+        .order-history {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .order-card {
+            background: #fff;
+            border-radius: var(--radius-sm);
+            padding: 16px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        .order-card .order-id {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .order-card .order-total {
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        /* ==================== RESPONSIF ==================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .section {
+                padding: 60px 16px;
+            }
+            .section-title {
+                font-size: 1.7rem;
+            }
+            .menu-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 18px;
+            }
+            .sidebar {
+                width: 100vw;
+                max-width: 100vw;
+            }
+            .nav {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 260px;
+                height: 100vh;
+                background: #fff;
+                flex-direction: column;
+                padding: 90px 28px 30px;
+                gap: 20px;
+                box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+                transition: right 0.35s ease;
+                z-index: 999;
+            }
+            .nav.open {
+                right: 0;
+            }
+            .hamburger {
+                display: flex;
+                z-index: 1002;
+            }
+            .modal {
+                padding: 24px 18px;
+                margin: 10px;
+            }
+            .toast-container {
+                bottom: 16px;
+                right: 12px;
+                left: 12px;
+            }
+            .toast {
+                max-width: 100%;
+                font-size: 0.82rem;
+            }
+            .footer-inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+        @media (max-width: 400px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .cart-item {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <!-- Logo -->
+            <a href="#beranda" class="logo" aria-label="Kafe Senja">
+                <div class="logo-icon">☕</div>
+                <span>Kafe Senja</span>
+            </a>
+
+            <!-- Navigasi -->
+            <nav>
+                <ul class="nav" id="navMenu">
+                    <li><a href="#beranda" data-nav="beranda">Beranda</a></li>
+                    <li><a href="#menu" data-nav="menu">Menu</a></li>
+                    <li><a href="#tentang" data-nav="tentang">Tentang Kami</a></li>
+                    <li><a href="#pesanan-saya" data-nav="pesanan-saya">Pesanan Saya</a></li>
+                </ul>
+            </nav>
+
+            <!-- Tombol Keranjang & Hamburger -->
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="cart-nav-btn" id="btnOpenCart" aria-label="Buka keranjang" title="Keranjang">
+                    🛒
+                    <span class="cart-badge" id="cartBadge"></span>
+                </button>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Menu navigasi">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== SIDEBAR KERANJANG ==================== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>🛒 Keranjang Belanja</h2>
+            <button class="sidebar-close" id="btnCloseCart" aria-label="Tutup keranjang">&times;</button>
+        </div>
+        <div class="sidebar-body" id="sidebarBody">
+            <!-- Diisi oleh JavaScript -->
+        </div>
+        <div class="sidebar-footer">
+            <div class="total-row">
+                <span>Total</span>
+                <span id="cartTotal">Rp 0</span>
+            </div>
+            <button class="btn btn-primary" id="btnCheckout" disabled>
+                Lanjutkan ke Pembayaran ✨
+            </button>
+        </div>
+    </aside>
+
+    <!-- ==================== MODAL SPIN WHEEL & KONFIRMASI ==================== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <!-- Konten diisi dinamis oleh JavaScript -->
+        </div>
+    </div>
+
+    <!-- ==================== TOAST CONTAINER ==================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ==================== BERANDA / HERO ==================== -->
+    <section class="hero" id="beranda">
+        <div class="hero-content">
+            <h1>Selamat Datang di <span>Kafe Senja</span></h1>
+            <p>Tempat nyaman untuk menikmati kopi pilihan dan hidangan lezat di suasana senja yang hangat. Setiap tegukan adalah cerita.</p>
+            <a href="#menu" class="btn btn-primary">Lihat Menu Kami</a>
+        </div>
+    </section>
+
+    <!-- ==================== MENU ==================== -->
+    <section class="section" id="menu">
+        <h2 class="section-title">📋 Menu Kami</h2>
+        <p class="section-subtitle">Pilihan terbaik untuk menemani harimu</p>
+        <div class="menu-grid" id="menuGrid">
+            <!-- Item menu di-render oleh JavaScript -->
+        </div>
+    </section>
+
+    <!-- ==================== TENTANG KAMI ==================== -->
+    <section class="section" id="tentang">
+        <h2 class="section-title">🏠 Tentang Kami</h2>
+        <div class="about-section">
+            <p>
+                <strong>Kafe Senja</strong> lahir dari kecintaan pada kopi dan momen sederhana yang hangat.
+                Kami menyajikan kopi dari biji pilihan lokal Indonesia, dipadukan dengan aneka hidangan
+                rumahan yang dibuat segar setiap hari. Suasana kami dirancang senyaman mungkin — tempat
+                yang pas untuk bekerja, bertemu teman, atau sekadar menikmati senja.
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== PESANAN SAYA ==================== -->
+    <section class="section" id="pesanan-saya">
+        <h2 class="section-title">📦 Pesanan Saya</h2>
+        <p class="section-subtitle">Riwayat pesanan terakhir Anda</p>
+        <div class="order-history" id="orderHistory">
+            <!-- Diisi oleh JavaScript -->
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <div>
+                <h4>📍 Alamat</h4>
+                <p>Jl. Senja Indah No. 17,<br>Kecamatan Mentari,<br>Kota Bandung, Jawa Barat</p>
+            </div>
+            <div>
+                <h4>🕐 Jam Operasional</h4>
+                <p>Senin - Jumat: 08:00 - 22:00<br>Sabtu - Minggu: 07:00 - 23:00</p>
+            </div>
+            <div>
+                <h4>🔗 Sosial Media</h4>
+                <p>
+                    <a href="#">Instagram</a> &nbsp;|&nbsp;
+                    <a href="#">TikTok</a> &nbsp;|&nbsp;
+                    <a href="#">WhatsApp</a>
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Kafe Senja. Semua hak dilindungi. Dibuat dengan ❤️ dan kopi.
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            // ==================== DATA MENU ====================
+            const menuItems = [{
+                id: 'kopi-senja',
+                name: 'Kopi Hitam Senja',
+                desc: 'Kopi hitam khas dengan biji Arabica pilihan dari Gayo.',
+                price: 25000,
+                img: 'https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=400&h=300&fit=crop'
+            }, {
+                id: 'cappuccino',
+                name: 'Cappuccino Classic',
+                desc: 'Perpaduan espresso dan susu foam yang lembut.',
+                price: 30000,
+                img: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=400&h=300&fit=crop'
+            }, {
+                id: 'matcha-latte',
+                name: 'Matcha Green Latte',
+                desc: 'Matcha premium dari Jepang dengan susu hangat.',
+                price: 28000,
+                img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=400&h=300&fit=crop'
+            }, {
+                id: 'croissant',
+                name: 'Croissant Butter',
+                desc: 'Croissant renyah dengan lapisan mentega Prancis.',
+                price: 22000,
+                img: 'https://images.unsplash.com/photo-1555507036-ab1f4038024a?w=400&h=300&fit=crop'
+            }, {
+                id: 'banana-cake',
+                name: 'Banana Caramel Cake',
+                desc: 'Kue pisang lembut dengan saus karamel homemade.',
+                price: 20000,
+                img: 'https://images.unsplash.com/photo-1607478900766-1329784836a5?w=400&h=300&fit=crop'
+            }, {
+                id: 'choco-frappe',
+                name: 'Chocolate Frappe',
+                desc: 'Coklat dingin dengan whipped cream dan choco chips.',
+                price: 27000,
+                img: 'https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=400&h=300&fit=crop'
+            }];
+
+            // ==================== STATE ====================
+            // Keranjang: { [id]: { ...item, qty: number } }
+            let cart = {};
+            // Riwayat pesanan: array of { id, items, totalAwal, diskon, totalBayar, tanggal }
+            let orderHistory = [];
+            // Diskon dari spin wheel (dalam persen)
+            let currentDiscount = 0;
+            // Flag spin wheel
+            let isSpinning = false;
+            // Animation frame ID
+            let spinAnimationId = null;
+            // Total awal sebelum diskon (disimpan saat masuk spin wheel)
+            let pendingTotalAwal = 0;
+            // Salinan keranjang saat masuk spin wheel
+            let pendingCart = {};
+
+            // ==================== DOM ELEMENTS ====================
+            const $header = document.getElementById('header');
+            const $navMenu = document.getElementById('navMenu');
+            const $hamburgerBtn = document.getElementById('hamburgerBtn');
+            const $btnOpenCart = document.getElementById('btnOpenCart');
+            const $btnCloseCart = document.getElementById('btnCloseCart');
+            const $sidebar = document.getElementById('sidebar');
+            const $sidebarOverlay = document.getElementById('sidebarOverlay');
+            const $sidebarBody = document.getElementById('sidebarBody');
+            const $cartTotal = document.getElementById('cartTotal');
+            const $cartBadge = document.getElementById('cartBadge');
+            const $btnCheckout = document.getElementById('btnCheckout');
+            const $modalOverlay = document.getElementById('modalOverlay');
+            const $modalContent = document.getElementById('modalContent');
+            const $toastContainer = document.getElementById('toastContainer');
+            const $menuGrid = document.getElementById('menuGrid');
+            const $orderHistory = document.getElementById('orderHistory');
+
+            // ==================== FUNGSI UTILITAS ====================
+            function formatRupiah(angka) {
+                return 'Rp ' + Math.round(angka).toLocaleString('id-ID');
+            }
+
+            function getCartCount() {
+                return Object.values(cart).reduce((sum, item) => sum + item.qty, 0);
+            }
+
+            function getCartTotal() {
+                return Object.values(cart).reduce((sum, item) => sum + item.price * item.qty, 0);
+            }
+
+            // ==================== LOCAL STORAGE ====================
+            function saveCart() {
+                localStorage.setItem('kafeSenja_cart', JSON.stringify(cart));
+            }
+
+            function loadCart() {
+                const saved = localStorage.getItem('kafeSenja_cart');
+                if (saved) {
+                    try {
+                        cart = JSON.parse(saved);
+                    } catch (e) {
+                        cart = {};
+                    }
+                }
+            }
+
+            function saveOrderHistory() {
+                localStorage.setItem('kafeSenja_orders', JSON.stringify(orderHistory));
+            }
+
+            function loadOrderHistory() {
+                const saved = localStorage.getItem('kafeSenja_orders');
+                if (saved) {
+                    try {
+                        orderHistory = JSON.parse(saved);
+                    } catch (e) {
+                        orderHistory = [];
+                    }
+                }
+            }
+
+            // ==================== TOAST ====================
+            function showToast(message, icon = '✅') {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `${icon} ${message}`;
+                $toastContainer.appendChild(toast);
+                // Hapus setelah animasi selesai (~2.6 detik)
+                setTimeout(() => {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 2700);
+            }
+
+            // ==================== RENDER MENU ====================
+            function renderMenu() {
+                $menuGrid.innerHTML = menuItems.map(item => `
+                    <div class="menu-card">
+                        <img src="${item.img}" alt="${item.name}" class="menu-card-img" loading="lazy"
+                             onerror="this.src='https://via.placeholder.com/400x300/e0d5c8/6B3A2E?text=${encodeURIComponent(item.name)}'">
+                        <div class="menu-card-body">
+                            <h3>${item.name}</h3>
+                            <p class="desc">${item.desc}</p>
+                            <p class="price">${formatRupiah(item.price)}</p>
+                            <button class="btn-add-cart" data-id="${item.id}">
+                                ➕ Tambah ke Keranjang
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Event listener untuk tombol "Tambah ke Keranjang"
+                $menuGrid.querySelectorAll('.btn-add-cart').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        addToCart(id);
+                    });
+                });
+            }
+
+            // ==================== MANAJEMEN KERANJANG ====================
+            function addToCart(id) {
+                const menuItem = menuItems.find(m => m.id === id);
+                if (!menuItem) return;
+
+                if (cart[id]) {
+                    cart[id].qty += 1;
+                } else {
+                    cart[id] = { ...menuItem, qty: 1 };
+                }
+                saveCart();
+                updateCartUI();
+                showToast(`${menuItem.name} ditambahkan ke keranjang!`, '🛒');
+                // Pulse badge
+                $cartBadge.classList.remove('pulse');
+                void $cartBadge.offsetWidth; // reflow
+                $cartBadge.classList.add('pulse');
+            }
+
+            function updateCartQty(id, delta) {
+                if (!cart[id]) return;
+                cart[id].qty += delta;
+                if (cart[id].qty <= 0) {
+                    delete cart[id];
+                }
+                saveCart();
+                updateCartUI();
+            }
+
+            function removeFromCart(id) {
+                if (cart[id]) {
+                    delete cart[id];
+                    saveCart();
+                    updateCartUI();
+                    showToast('Item dihapus dari keranjang', '🗑️');
+                }
+            }
+
+            function clearCart() {
+                cart = {};
+                saveCart();
+                updateCartUI();
+            }
+
+            function updateCartUI() {
+                const count = getCartCount();
+                const total = getCartTotal();
+
+                // Update badge
+                $cartBadge.textContent = count > 0 ? count : '';
+                if (count === 0) {
+                    $cartBadge.style.display = 'none';
+                } else {
+                    $cartBadge.style.display = 'flex';
+                }
+
+                // Update total
+                $cartTotal.textContent = formatRupiah(total);
+
+                // Update tombol checkout
+                $btnCheckout.disabled = count === 0;
+
+                // Update isi sidebar
+                renderSidebarBody();
+            }
+
+            function renderSidebarBody() {
+                const items = Object.values(cart);
+                if (items.length === 0) {
+                    $sidebarBody.innerHTML = `
+                        <div class="sidebar-empty">
+                            <span class="empty-icon">🛒</span>
+                            <p>Keranjang masih kosong.</p>
+                            <p style="font-size:0.8rem;">Yuk, pilih menu favoritmu!</p>
+                        </div>`;
+                } else {
+                    $sidebarBody.innerHTML = items.map(item => `
+                        <div class="cart-item">
+                            <img src="${item.img}" alt="${item.name}" class="cart-item-img" loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/60x60/e0d5c8/6B3A2E?text=Menu'">
+                            <div class="cart-item-info">
+                                <h4>${item.name}</h4>
+                                <span class="cart-item-price">${formatRupiah(item.price)}</span>
+                                <br><span class="cart-item-subtotal">Subtotal: ${formatRupiah(item.price * item.qty)}</span>
+                            </div>
+                            <div class="cart-item-qty">
+                                <button class="qty-btn" data-action="minus" data-id="${item.id}">−</button>
+                                <span class="qty-num">${item.qty}</span>
+                                <button class="qty-btn" data-action="plus" data-id="${item.id}">+</button>
+                            </div>
+                            <button class="cart-item-remove" data-action="remove" data-id="${item.id}">🗑️</button>
+                        </div>
+                    `).join('');
+
+                    // Event delegation untuk tombol qty dan remove
+                    $sidebarBody.querySelectorAll('.qty-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const action = this.getAttribute('data-action');
+                            updateCartQty(id, action === 'plus' ? 1 : -1);
+                        });
+                    });
+                    $sidebarBody.querySelectorAll('.cart-item-remove').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            removeFromCart(id);
+                        });
+                    });
+                }
+            }
+
+            // ==================== SIDEBAR BUKA/TUTUP ====================
+            function openSidebar() {
+                $sidebar.classList.add('open');
+                $sidebarOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                $sidebar.classList.remove('open');
+                $sidebarOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+
+            $btnOpenCart.addEventListener('click', openSidebar);
+            $btnCloseCart.addEventListener('click', closeSidebar);
+            $sidebarOverlay.addEventListener('click', closeSidebar);
+
+            // Tutup sidebar dengan Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if ($sidebar.classList.contains('open')) {
+                        closeSidebar();
+                    }
+                    if ($modalOverlay.classList.contains('open') && !isSpinning) {
+                        closeModal();
+                    }
+                }
+            });
+
+            // ==================== MODAL ====================
+            function openModal(htmlContent) {
+                $modalContent.innerHTML = htmlContent;
+                $modalOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeModal() {
+                if (isSpinning) return; // Jangan tutup modal saat roda berputar
+                // Hentikan animasi jika ada
+                if (spinAnimationId) {
+                    cancelAnimationFrame(spinAnimationId);
+                    spinAnimationId = null;
+                    isSpinning = false;
+                }
+                $modalOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+                currentDiscount = 0;
+                pendingTotalAwal = 0;
+                pendingCart = {};
+            }
+
+            $modalOverlay.addEventListener('click', function(e) {
+                if (e.target === $modalOverlay && !isSpinning) {
+                    closeModal();
+                }
+            });
+
+            // ==================== SPIN WHEEL ====================
+            const SEGMENTS = [
+                { label: '0%', value: 0, color: '#E74C3C' },
+                { label: '5%', value: 5, color: '#F39C12' },
+                { label: '10%', value: 10, color: '#2ECC71' },
+                { label: '15%', value: 15, color: '#3498DB' },
+                { label: '20%', value: 20, color: '#9B59B6' },
+                { label: '25%', value: 25, color: '#1ABC9C' },
+                { label: '30%', value: 30, color: '#E67E22' },
+                { label: '50%', value: 50, color: '#FFD700' },
+            ];
+            const NUM_SEGMENTS = SEGMENTS.length;
+            const SEGMENT_ANGLE = (2 * Math.PI) / NUM_SEGMENTS; // dalam radian
+
+            function drawWheel(canvas, rotationAngle) {
+                const ctx = canvas.getContext('2d');
+                const size = canvas.width;
+                const centerX = size / 2;
+                const centerY = size / 2;
+                const radius = size / 2 - 8;
+
+                ctx.clearRect(0, 0, size, size);
+
+                // Gambar segmen
+                for (let i = 0; i < NUM_SEGMENTS; i++) {
+                    const startAngle = rotationAngle + i * SEGMENT_ANGLE;
+                    const endAngle = startAngle + SEGMENT_ANGLE;
+
+                    // Isi segmen
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                    ctx.closePath();
+                    ctx.fillStyle = SEGMENTS[i].color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    // Teks di segmen
+                    const midAngle = startAngle + SEGMENT_ANGLE / 2;
+                    const textRadius = radius * 0.68;
+                    const textX = centerX + textRadius * Math.cos(midAngle);
+                    const textY = centerY + textRadius * Math.sin(midAngle);
+
+                    ctx.save();
+                    ctx.translate(textX, textY);
+                    ctx.rotate(midAngle + Math.PI / 2); // rotasi agar teks radial
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 15px Poppins, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    // Outline tipis untuk keterbacaan
+                    ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+                    ctx.lineWidth = 3;
+                    ctx.strokeText(SEGMENTS[i].label, 0, 0);
+                    ctx.fillText(SEGMENTS[i].label, 0, 0);
+                    ctx.restore();
+                }
+
+                // Lingkaran tengah
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius * 0.22, 0, 2 * Math.PI);
+                ctx.fillStyle = '#fff';
+                ctx.fill();
+                ctx.strokeStyle = '#6B3A2E';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Teks tengah
+                ctx.fillStyle = '#6B3A2E';
+                ctx.font = 'bold 13px Poppins, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('PUTAR', centerX, centerY);
+            }
+
+            function getWinningSegment(finalRotation) {
+                // Pointer di atas (sudut -PI/2 atau 270°)
+                // Roda berputar searah jarum jam sebesar finalRotation radian
+                // Segmen yang menang = segmen yang sekarang berada di bawah pointer
+                // Posisi pointer dalam koordinat roda = -PI/2 - finalRotation
+                let pointerAngle = (-Math.PI / 2 - finalRotation) % (2 * Math.PI);
+                if (pointerAngle < 0) pointerAngle += 2 * Math.PI;
+                const index = Math.floor(pointerAngle / SEGMENT_ANGLE);
+                return SEGMENTS[index];
+            }
+
+            function spinWheel(canvas, onComplete) {
+                if (isSpinning) return;
+                isSpinning = true;
+
+                // Total rotasi: 5-8 putaran penuh + sudut acak
+                const extraSpins = 5 + Math.floor(Math.random() * 4); // 5-8 putaran
+                const randomAngle = Math.random() * 2 * Math.PI;
+                const totalRotation = extraSpins * 2 * Math.PI + randomAngle;
+                const duration = 4200 + Math.random() * 800; // 4.2 - 5 detik
+                const startTime = performance.now();
+                let currentRotation = 0;
+
+                function easeOutCubic(t) {
+                    return 1 - Math.pow(1 - t, 3);
+                }
+
+                function animate(now) {
+                    const elapsed = now - startTime;
+                    const rawProgress = Math.min(elapsed / duration, 1);
+                    const progress = easeOutCubic(rawProgress);
+                    currentRotation = totalRotation * progress;
+
+                    drawWheel(canvas, currentRotation);
+
+                    if (rawProgress < 1) {
+                        spinAnimationId = requestAnimationFrame(animate);
+                    } else {
+                        // Animasi selesai
+                        spinAnimationId = null;
+                        isSpinning = false;
+                        const finalRotation = currentRotation % (2 * Math.PI);
+                        const winner = getWinningSegment(finalRotation);
+                        if (onComplete) onComplete(winner);
+                    }
+                }
+
+                spinAnimationId = requestAnimationFrame(animate);
+            }
+
+            // ==================== MODAL: SPIN WHEEL STEP ====================
+            function openSpinWheelModal() {
+                if (getCartCount() === 0) return;
+                pendingTotalAwal = getCartTotal();
+                pendingCart = { ...cart }; // salin keranjang saat ini
+                currentDiscount = 0;
+
+                const canvasSize = Math.min(340, window.innerWidth - 80);
+                const html = `
+                    <button class="modal-close" id="modalCloseSpin" aria-label="Tutup">&times;</button>
+                    <h2>🎡 Spin the Wheel Diskon!</h2>
+                    <p style="color:var(--text-muted);margin-bottom:8px;">Putar roda keberuntungan dan dapatkan diskon untuk pesananmu!</p>
+                    <div class="wheel-container" style="width:${canvasSize}px;height:${canvasSize}px;">
+                        <div class="wheel-pointer"></div>
+                        <canvas id="spinCanvas" width="${canvasSize}" height="${canvasSize}"></canvas>
+                    </div>
+                    <button class="btn btn-primary btn-spin" id="btnSpin">🎰 Putar Roda</button>
+                    <p class="result-text" id="spinResult"></p>
+                    <div id="spinActionArea" style="margin-top:8px;"></div>
+                `;
+                openModal(html);
+
+                // Gambar roda awal
+                const canvas = document.getElementById('spinCanvas');
+                drawWheel(canvas, 0);
+
+                // Event listener tombol spin
+                const btnSpin = document.getElementById('btnSpin');
+                const spinResult = document.getElementById('spinResult');
+                const spinActionArea = document.getElementById('spinActionArea');
+                const modalCloseSpin = document.getElementById('modalCloseSpin');
+
+                modalCloseSpin.addEventListener('click', function() {
+                    if (!isSpinning) closeModal();
+                });
+
+                btnSpin.addEventListener('click', function() {
+                    if (isSpinning) return;
+                    btnSpin.disabled = true;
+                    btnSpin.textContent = '⏳ Memutar...';
+                    spinResult.textContent = '';
+                    spinActionArea.innerHTML = '';
+
+                    spinWheel(canvas, function(winner) {
+                        currentDiscount = winner.value;
+                        btnSpin.textContent = '🔄 Putar Ulang';
+                        btnSpin.disabled = false;
+                        spinResult.innerHTML = `🎉 Kamu mendapatkan diskon <strong>${winner.label}</strong>!`;
+
+                        const totalBayar = pendingTotalAwal - (pendingTotalAwal * currentDiscount /
+                            100);
+                        spinActionArea.innerHTML = `
+                            <button class="btn btn-primary" id="btnUseDiscount" style="margin-top:8px;">
+                                Lanjutkan dengan Diskon ${winner.label} ✨
+                            </button>
+                            <p style="font-size:0.85rem;color:var(--text-muted);margin-top:6px;">
+                                Total awal: ${formatRupiah(pendingTotalAwal)} → Bayar: <strong>${formatRupiah(totalBayar)}</strong>
+                            </p>
+                        `;
+
+                        // Event untuk lanjut ke konfirmasi
+                        document.getElementById('btnUseDiscount').addEventListener('click',
+                            openConfirmationStep);
+                    });
+                });
+            }
+
+            // ==================== MODAL: KONFIRMASI PESANAN ====================
+            function openConfirmationStep() {
+                const items = Object.values(pendingCart);
+                const totalAwal = pendingTotalAwal;
+                const diskon = currentDiscount;
+                const totalBayar = totalAwal - (totalAwal * diskon / 100);
+
+                let itemsHtml = items.map(item => `
+                    <tr>
+                        <td>${item.name} (x${item.qty})</td>
+                        <td style="text-align:right;">${formatRupiah(item.price * item.qty)}</td>
+                    </tr>
+                `).join('');
+
+                const html = `
+                    <button class="modal-close" id="modalCloseConfirm" aria-label="Tutup">&times;</button>
+                    <h2>📋 Konfirmasi Pesanan</h2>
+                    <table class="summary-table">
+                        <thead><tr><th>Item</th><th style="text-align:right;">Subtotal</th></tr></thead>
+                        <tbody>${itemsHtml}</tbody>
+                    </table>
+                    <table class="summary-table" style="margin-top:4px;">
+                        <tr><td>Total Awal</td><td style="text-align:right;">${formatRupiah(totalAwal)}</td></tr>
+                        <tr><td>Diskon (${diskon}%)</td><td style="text-align:right;color:#E67E22;">- ${formatRupiah(totalAwal * diskon / 100)}</td></tr>
+                        <tr class="total-final"><td>Total Bayar</td><td style="text-align:right;">${formatRupiah(totalBayar)}</td></tr>
+                    </table>
+                    <button class="btn btn-primary" id="btnBayar" style="margin-top:12px;width:100%;">
+                        💳 Bayar Sekarang
+                    </button>
+                `;
+                $modalContent.innerHTML = html;
+
+                // Event listener
+                document.getElementById('modalCloseConfirm').addEventListener('click', function() {
+                    if (!isSpinning) closeModal();
+                });
+                document.getElementById('btnBayar').addEventListener('click', processPayment);
+            }
+
+            // ==================== PROSES PEMBAYARAN ====================
+            function processPayment() {
+                const totalAwal = pendingTotalAwal;
+                const diskon = currentDiscount;
+                const totalBayar = totalAwal - (totalAwal * diskon / 100);
+                const orderId = 'KS-' + Date.now().toString(36).toUpperCase().slice(-6);
+                const items = Object.values(pendingCart);
+
+                // Simpan ke riwayat
+                const order = {
+                    id: orderId,
+                    items: items.map(i => ({ name: i.name, qty: i.qty, price: i.price })),
+                    totalAwal,
+                    diskon,
+                    totalBayar: Math.round(totalBayar),
+                    tanggal: new Date().toLocaleString('id-ID'),
+                };
+                orderHistory.unshift(order);
+                // Batasi riwayat 10 pesanan terakhir
+                if (orderHistory.length > 10) orderHistory = orderHistory.slice(0, 10);
+                saveOrderHistory();
+                renderOrderHistory();
+
+                // Kosongkan keranjang
+                clearCart();
+                closeSidebar();
+
+                // Tampilkan pesan sukses di modal
+                const html = `
+                    <h2>✅ Pesanan Berhasil!</h2>
+                    <div style="font-size:3rem;margin:12px 0;">🎉</div>
+                    <p>Nomor pesanan: <strong style="font-size:1.2rem;color:var(--primary);">#${orderId}</strong></p>
+                    <p style="color:var(--text-muted);">Silakan tunjukkan nomor ini ke kasir.</p>
+                    <p style="font-size:0.9rem;margin-top:8px;">Total bayar: <strong>${formatRupiah(totalBayar)}</strong> (hemat ${diskon}%)</p>
+                    <button class="btn btn-primary" id="btnCloseSuccess" style="margin-top:16px;">Tutup</button>
+                `;
+                $modalContent.innerHTML = html;
+                document.getElementById('btnCloseSuccess').addEventListener('click', closeModal);
+
+                // Reset state
+                currentDiscount = 0;
+                pendingTotalAwal = 0;
+                pendingCart = {};
+                updateCartUI();
+                showToast(`Pesanan #${orderId} berhasil! Hemat ${diskon}% 🎉`, '✅');
+            }
+
+            // ==================== CHECKOUT FLOW ====================
+            $btnCheckout.addEventListener('click', function() {
+                if (getCartCount() === 0) return;
+                closeSidebar();
+                openSpinWheelModal();
+            });
+
+            // ==================== RENDER RIWAYAT PESANAN ====================
+            function renderOrderHistory() {
+                if (orderHistory.length === 0) {
+                    $orderHistory.innerHTML =
+                        '<p style="text-align:center;color:var(--text-muted);">Belum ada riwayat pesanan. Yuk, pesan sesuatu!</p>';
+                } else {
+                    $orderHistory.innerHTML = orderHistory.map(order => `
+                        <div class="order-card">
+                            <div>
+                                <span class="order-id">#${order.id}</span>
+                                <span style="color:var(--text-muted);font-size:0.8rem;margin-left:8px;">${order.tanggal}</span>
+                                <br><span style="font-size:0.82rem;">${order.items.map(i => i.name + ' x' + i.qty).join(', ')}</span>
+                            </div>
+                            <div style="text-align:right;">
+                                <span class="order-total">${formatRupiah(order.totalBayar)}</span>
+                                <br><span style="font-size:0.75rem;color:var(--text-muted);">Diskon ${order.diskon}%</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // ==================== NAVIGASI SCROLL HALUS ====================
+            document.querySelectorAll('.nav a[data-nav]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const target = document.getElementById(targetId);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    // Tutup menu mobile jika terbuka
+                    if ($navMenu.classList.contains('open')) {
+                        $navMenu.classList.remove('open');
+                    }
+                });
+            });
+
+            // ==================== HAMBURGER MENU MOBILE ====================
+            $hamburgerBtn.addEventListener('click', function() {
+                $navMenu.classList.toggle('open');
+            });
+            // Tutup menu mobile saat klik di luar
+            document.addEventListener('click', function(e) {
+                if ($navMenu.classList.contains('open') &&
+                    !$navMenu.contains(e.target) &&
+                    e.target !== $hamburgerBtn &&
+                    !$hamburgerBtn.contains(e.target)) {
+                    $navMenu.classList.remove('open');
+                }
+            });
+
+            // ==================== HEADER SCROLL EFFECT ====================
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 30) {
+                    $header.classList.add('scrolled');
+                } else {
+                    $header.classList.remove('scrolled');
+                }
+
+                // Update active nav link berdasarkan scroll
+                const sections = ['beranda', 'menu', 'tentang', 'pesanan-saya'];
+                let currentSection = 'beranda';
+                sections.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && window.scrollY >= el.offsetTop - 120) {
+                        currentSection = id;
+                    }
+                });
+                document.querySelectorAll('.nav a[data-nav]').forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('data-nav') ===
+                        currentSection);
+                });
+            });
+
+            // ==================== INISIALISASI ====================
+            function init() {
+                loadCart();
+                loadOrderHistory();
+                renderMenu();
+                updateCartUI();
+                renderOrderHistory();
+
+                // Set active nav awal
+                document.querySelector('.nav a[data-nav="beranda"]')?.classList.add('active');
+            }
+
+            init();
+
+            console.log('☕ Kafe Senja - Siap melayani!');
+            console.log('📋 Menu:', menuItems.length, 'item');
+            console.log('🛒 Item di keranjang:', getCartCount());
+            console.log('📦 Riwayat pesanan:', orderHistory.length);
+        })();
+    </script>
+</body>
+</html>
